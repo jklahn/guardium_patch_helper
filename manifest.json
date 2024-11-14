@@ -1,0 +1,18 @@
+{
+    "SDK_version": "10.5.0.2", 
+    "description": "Guardium patching made easy.  Download, upload, and install patches without having to use any command line utilities.", 
+    "name": "Guardium Patch Helper", 
+    "navigation_areas": [
+        {
+            "default_roles": [
+                "admin"
+            ], 
+            "id": "PatchHelper", 
+            "name": "Guardium Patch Helper", 
+            "text": "Patch Helper", 
+            "url": "/"
+        }
+    ], 
+    "uuid": "9e55e93c-52fa-4dbd-9e74-552f566311b9", 
+    "version": "1.0"
+}

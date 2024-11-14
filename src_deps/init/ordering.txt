@@ -1,0 +1,1 @@
+echo "init/ordering.txt executed. Add commands or shell script path, to install other dependencies (see documentation)."

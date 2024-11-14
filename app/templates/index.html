@@ -1,0 +1,348 @@
+<html>
+  <head>
+    <title>Guardium Patch Helper</title>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script>
+      function disableButton(elementID) {
+        var button = document.getElementById(elementID);
+        button.disabled = true;
+        button.style.background = "#dddddd";
+        button.style.cursor = "wait";
+      }
+   </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+  </head>
+<body>
+    <div id="flex-container">
+        <div class="flex-item">
+            <h4>Guardium Patch Helper</h4>
+        </div>
+
+        <div class="flex-item"></div>
+
+        <div class="flex-item">
+            <form action="login" method="get">
+                <input type="hidden" name="org.apache.catalina.filters.CSRF_NONCE" value="{{ crsf_token }}"/>
+                <input class="logout" name="logout" type="submit" value="Logout">
+            </form>
+        </div>
+    </div>
+  <div class="tabordion">
+    <br>
+    <section id="section2">
+      <input type="radio" name="sections" id="option2" checked>
+      <label for="option2">Appliance Patches</label>
+      <article>
+        <h2>Appliance Patches</h2>
+            Release version: <b>{{ release_version }}</b>&nbsp;&nbsp;GPU version: <b>{{ gpu_level }}</b>
+            <br>
+            Appliance Type: <b>{{ appliance_type }}</b>
+            {% if 'Manager' in appliance_type %}
+              &nbsp;(Central Manager)
+            {% endif %}
+            <br>
+          Appliance IP: <b>{{ appliance_ip }}</b>
+        <h3 >Installed Patches:</h3>
+        <ul style="background-color: WhiteSmoke">
+          {% for patch in installed_patches_list %}
+            {% if not 'Requested' in patch['status'] %}
+            <li>
+                {% if patch['number'] %}
+                  [{{ patch['number'] }}]&nbsp;
+                {% endif %}
+
+                {{ patch['description'] }}&nbsp;&nbsp;&#124;&nbsp;&nbsp;
+
+                {% if 'DONE' in patch['status'] %}
+                  Installation Succeeded
+
+                {% else %}
+                  {{ patch['status'] }}
+
+                {% endif %}
+            </li>
+            {% endif %}
+          {% endfor %} <!-- end for installed patches -->
+        </ul>
+
+        <h3 >Scheduled Patches:</h3>
+        <ul style="background-color: WhiteSmoke">
+          {% for patch in scheduled_patch_list %}
+            <li>
+              <form action="deletepatch" method="post" onsubmit="disableButton('delete{{ patch['number'] }}');">
+                <input type="hidden"  name="number" value="{{ patch['number'] }}">
+                <input align="center" id="delete{{ patch['number'] }}" type="submit"
+                       name="deletepatchbutton" value="Delete">
+                <input type="hidden" name="org.apache.catalina.filters.CSRF_NONCE" value="{{ crsf_token }}"/>
+                [{{ patch['number'] }}]&nbsp;
+                {{ patch['description'] }}
+                &nbsp;<i>{{ patch['install_start_time'] }}</i>
+                <br>
+                <br>
+              </form>
+            </li>
+          {% endfor %} <!-- end for installed patches -->
+        </ul>
+
+        <h3>Missing Patches:</h3>
+        <ul style="background-color: WhiteSmoke">
+            {% if missing_patches_list %}
+              {% for patch in missing_patches_list %}
+                 {% if 'DPS' not in patch['description'] %}
+                    <li>
+                      {% if patch['number'] %}
+                        [{{ patch['number'] }}]&nbsp;
+                      {% endif %}
+                      <a href="{{ patch['downloadLink'] }} " target="_blank">{{ patch['description'] }}</a>
+                      {% if patch['includedInPatches'] %}
+                        <ul>
+                          <i>Patch already included in {{ patch['includedInPatches'] }}</i>
+                        </ul>
+                      {% endif %}
+                    </li>
+                 {% endif %}  <!-- end for not dps -->
+              {% endfor %} <!-- end for patches -->
+        </ul>
+        <p>
+          <b>Important:</b> If installing a GPU, install the latest version of patch 9997 (Health Check) <b>FIRST</b>.  Then, install the GPU:<br>
+            <ul style="background-color: WhiteSmoke">
+              <li>
+                [9997] <a href="https://www-945.ibm.com/support/fixcentral/swg/selectFixes?product=ibm/Information+Management/InfoSphere+Guardium&release=All&platform=All&function=textSearch&text=9997"
+               target="_blank">Latest Health Check Patch</a>
+              </li>
+            </ul>
+        </p>
+            {% endif %}
+
+
+        <h3>Install Instructions:</h3>
+
+        <p><b>Step 1:</b>  Download and unzip the patch (.sig) file.</p>
+
+        <p><b>Step 2:</b>  Start the fileserver:</p>
+
+        <div class="fileserver">
+          <form action="startfileserver" method="post" onsubmit="disableButton('startserverbutton');">
+             <input type="hidden" name="org.apache.catalina.filters.CSRF_NONCE" value="{{ crsf_token }}"/>
+              {% if file_sever_on %}
+                  <input align="center" type="submit" value="Fileserver Started" name="fileserver-running" disabled>
+
+              {% else %}
+                <label for="source-ip2"><b>Source IP Address of the computer that will be uploading patches</b></label>
+                <input class="password" type="text" align="center" placeholder="Source IP Address" name="source-ip"
+                     id="source-ip2" value="{{ request.form.sourceip }}"
+                       required pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$">
+                  <br>
+                  <br>
+                  <input align="center" type="submit" id="startserverbutton" name="fileserver-on" value="Start Fileserver">
+              {% endif %}
+          </form>
+            <ul>
+              {% if not file_sever_on %}
+                {% if errors %}
+                  {% if 'fileserver' in errors %}
+                <p class="error"><strong>Error: Error Starting Fileserver.  Please try again.</strong><br>{{ error }}
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+            </ul>
+        </div>
+        <p><b>Step 3:</b>  Upload the patch (.sig) file to the fileserver.</p>
+          {% if file_sever_on %}
+          <ul>
+            <p>
+              From a browser on <b>{{ fileserver_source_ip }}</b>, navigate to:
+              <a href="{{ file_server_link }} " target="_blank">  {{ file_server_link }}</a>
+            </p>
+          {% endif %}
+          </ul>
+         <p><b>Step 4:</b>  Stop the fileserver.</p>
+          <div class="fileserver">
+            {% if file_sever_on %}
+                <form action="stopfileserver" method="post" onsubmit="disableButton('stopfileserverbutton');">
+                  <input align="center" id="stopfileserverbutton" type="submit" name="fileserver-off"
+                         value="Stop Fileserver">
+                  <input type="hidden" name="org.apache.catalina.filters.CSRF_NONCE" value="{{ crsf_token }}"/>
+                </form>
+            {% endif %}
+          </div>
+         <p><b>Step 5:</b>  Schedule patch installation or install patch now.</p>
+
+        {% if not file_sever_on %}
+          <ul style="background-color: WhiteSmoke">
+            {% for patch in patches_available_install %}
+              <li>
+                  [{{ patch['number'] }}] {{ patch['description'] }}
+
+                  <!-- Trigger the modal with a button -->
+                  <button type="button" data-toggle="modal" data-target="#myModal"
+                  name="installmodalbutton">Schedule / Install</button>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">[{{ patch['number'] }}] {{ patch['description'] }}</h4>
+                        </div>
+                    <div class="modal-body">
+                        <div class="wrapper">
+                          <div class="leftside">
+                            <b>Schedule</b>
+                            <br><br>
+                            <form action="installpatch" method="post" style="margin: 0; padding: 0;" onsubmit="$('#submittingpatch').show();disableButton('schedulepatchbutton');">
+                              <input type="date" name="date" required>
+                              <input type="time" name="time" required>
+                              <input type="hidden"  name="number" value="{{ patch['number'] }}">
+                              <input align="center" type="submit" name="schedulepatch" id="schedulepatchbutton" value="Schedule">
+                              <input type="hidden" name="org.apache.catalina.filters.CSRF_NONCE" value="{{ crsf_token }}"/>
+                            </form>
+                          </div>
+
+                          <div class="line"></div>
+
+                          <div class="wordwrapper">
+                              <div class="word">or</div>
+                          </div>
+
+                          <div class="rightside">
+                            <b>Install Now</b>
+                              <form action="installpatch" method="post" style="margin: 0; padding: 0;" onsubmit="$('#submittingpatch').show();disableButton('installnowbutton');">
+                              <input type="hidden"  name="number" value="{{ patch['number'] }}">
+                              <input align="center" type="submit" name="installpatch" id="installnowbutton" value="Install Now">
+                              <input type="hidden" name="org.apache.catalina.filters.CSRF_NONCE" value="{{ crsf_token }}"/>
+                            </form>
+                          </div>
+
+                        </div>​
+                            <div align="center" id="submittingpatch" style="display:none;"><b>Submitting Patch. Please Wait...</b></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End of modal -->
+
+                </li>
+                {% if patch['dependencies'] %}
+                  <ul><i>Dependencies:</i> [{{ patch['dependencies'] }}]</ul>
+                {% endif %}  <!-- end patch dependencies -->
+            <br>
+            {% endfor %} <!-- end for patches -->
+            {% if errors %}
+              {% if 'patch_install' in errors %}
+                {% if errors['patch_install'] != None %}
+                  <br>
+                  <b>Install Error: {{ errors['patch_install'] }} </b>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          </ul>
+        {% endif %} <!-- endif fileserver on check -->
+          {% if 'Manager' in appliance_type %}
+            <h3>Distribute Patches:</h3>
+            Once uploaded to the Central Manager, patches can be distributed to other appliances that it manages.  Navigate to:
+            <br>
+              <ul>
+                  <b>Setup &#8594; Tools and Views &#8594; Patch Distribution</b>
+              </ul>
+          {% endif %}
+          <br>
+      </article>
+    </section>
+    <section id="section3">
+      <input type="radio" name="sections" id="option3">
+      <label for="option3">DPS<br>(Data Protection Subscription)</label>
+      <article>
+        <h2>DPS (Data Protection Subscription)</h2>
+        <p>Guardium's Database Protection Subscription Service (DPS) supports the maintenance of predefined assessment tests, SQL- based tests, CVEs, and groups such as database versions and patches.</p>
+        <h3>Import Instructions</h3>
+        <!-- host is managed and not a CM, it will display a message to use the CM. -->
+        {% if 'Manager' in appliance_type or 'Standalone' in appliance_type %}
+
+        <b>Note:</b>  If this is your first time importing DPS, download and import the latest <u><i>Quarterly</i></u> DPS <b>FIRST</b>, then apply the Rapid Response DPS.  The Quarterly DPS is roll-up patch which will contain all previoius DPS updates and is a dependency for Rapid Response DPS.</p>
+        <p><b>Step 1:</b>  Download and unzip the DPS update:</p>
+          <div style="background-color: WhiteSmoke">
+            <ul>
+              {% for patch_version in all_updates %}
+                {% for component in patch_version['components'] %}
+                  {% if component['name'] == 'DPS' %}
+                    {% for gpu in component['gpus'] %}
+                      {% for patch in gpu['patches'] %}
+                      <li>
+                        <a href="{{ patch['downloadLink'] }} " target="_blank"> {{ patch['description'] }} </a>
+                      </li>
+                        {% endfor %} <!-- end for patches -->
+                      {% endfor %} <!-- end for gpus -->
+                {% endif %} <!-- end if component DPS -->
+              {% endfor %} <!-- end for component -->
+            {% endfor %} <!-- end for patch version -->
+          </ul>
+        </div>
+
+        <p><b>Step 2:</b>  Upload the DPS (.enc file) in the Guardium conosle:</p>
+        <ul style="background-color: WhiteSmoke">
+          <li>Navigate to <b>Harden &#8594; Customer Uploads &#8594; DPS Upload</b></li>
+          <li>Once the upload is complete, the DPS will be available in the 'Import DPS' section.</li>
+        </ul>
+
+        <p><b>Step 3:</b>  Start the import by clicking the green checkmark button:</p>
+        <img src="{{ url_for('static', filename = 'images/import-dps-check-button.png') }}" alt="">
+
+      {% else %} <!-- host is managed and not a CM, it will display a message to use the CM. -->
+          <b><p>This host is managed by a Central Manager.  Login to the Central Manager to upload DPS.</p></b>
+      {% endif %}
+
+      </article>
+    </section>
+    <section id="section4">
+      <input type="radio" name="sections" id="option4">
+      <label for="option4">All Patches</label>
+      <article>
+        <h2>All Patches</h2>
+    <div style="color:black; font-size:0.9em;">
+      <ul>
+      {% for patch_version in all_updates %}
+        <li> {{ patch_version['patchVersion'] }} </li>
+        <ul>
+        {% for component in patch_version['components'] %}
+          <li> {{ component['name'] }} </li>
+            <ul>
+            {% for gpu in component['gpus'] %}
+              <li> {{ gpu['minGpuLevel'] }} </li>
+                <ul>
+                {% for patch in gpu['patches'] %}
+                  <li>
+                    {% if patch['number'] %}
+                      [ {{ patch['number'] }} ]
+                    {% endif %}
+                    <a href="{{ patch['downloadLink'] }} " target="_blank"> {{ patch['description'] }} </a>
+                    {% if patch['includedInPatches'] %}
+                      <ul>
+                        <i>Patch already included in {{ patch['includedInPatches'] }}</i>
+                      </ul>
+                    {% endif %}
+                  </li>
+                {% endfor %} <!-- end for patches -->
+                </ul>
+            {% endfor %} <!-- end for gpus -->
+              </ul>
+        {% endfor %} <!-- end for component -->
+            </ul>
+      {% endfor %} <!-- end for patch version -->
+          </ul>
+    </div>
+      </article>
+    </section>
+  </div>
+</body>
+</html>

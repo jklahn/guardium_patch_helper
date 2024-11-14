@@ -1,0 +1,524 @@
+h1 {
+  color: #333;
+  font-family: arial, sans-serif;
+  margin: 1em auto;
+  width: 80%;
+  padding-top: 15px;
+}
+
+h4 {
+  color: #333;
+  font-family: arial, sans-serif;
+  font-size: 18px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+  margin-left: 10px;
+  padding-bottom: 0px;
+}
+
+
+#flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 1px #ccc solid;
+    margin: 0 auto;
+}
+
+.flex-item {
+    width: 300px;
+    height: 40px;
+    background: white;
+}
+
+
+
+.wrapper {
+    position: relative;
+    width: 100%;
+    height: 200px;
+}
+
+.leftside {
+float: left;
+text-align:center;
+width: 50%;
+}
+
+.rightside{
+float: right;
+text-align:center;
+width: 50%;
+}
+
+.line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #ccc;
+    z-index: 1;
+}
+
+.wordwrapper {
+    text-align: center;
+    height: 12px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    margin-top: -12px;
+    z-index: 2;
+}
+
+.word {
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px;
+    font: bold 12px arial,sans-serif;
+    background: #fff;
+}
+
+input[name="logout"] {
+  color: #333;
+  background-color: white;
+  border: none;
+  font-family: arial, sans-serif;
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right:10px;
+  padding-bottom: 0px;
+  float: right;
+  cursor: pointer;
+}
+
+a[name="logout"]:link {
+  text-decoration: none;
+}
+
+a[name="logout"]:visited {
+  text-decoration: none;
+  color: #333;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 0.5em 0;
+    padding: 0;
+    width: 100%;
+}
+
+button[name="installmodalbutton"] {
+    cursor: pointer;
+    border-radius: 5em;
+    color: white;
+    background: green;
+    display: block-inline;
+    border: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 13px;
+    font-weight: normal;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    width: 130px;
+    float: right;
+    vertical-align: top;
+}
+
+input[name="deletepatchbutton"] {
+    cursor: pointer;
+    border-radius: 5em;
+    color: white;
+    background: red;
+    border: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 13px;
+    font-weight: normal;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    width: 100px;
+    float: right;
+}
+
+input[name="refresh"] {
+    cursor: pointer;
+    border-radius: 5em;
+    color: white;
+    background: green;
+    border: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 13px;
+    font-weight: normal;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    width: 130px;
+    margin-left: 30px;
+}
+
+input[name="installpatch"] {
+    cursor: pointer;
+    border-radius: 5em;
+    color: white;
+    background: green;
+    border: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 13px;
+    font-weight: normal;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    width: 100px;
+    position:absolute;
+    bottom:  0;
+    right:   90px;
+}
+
+input[name="schedulepatch"] {
+    cursor: pointer;
+    border-radius: 5em;
+    color: white;
+    background: blue;
+    border: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 13px;
+    font-weight: normal;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    width: 100px;
+    position:absolute;
+    bottom:  0;
+    left:   95px;
+}
+
+input[name="installingpatch"] {
+    border-radius: 5em;
+    color: white;
+    display: block-inline;
+    background: gray;
+    border: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 13px;
+    font-weight: normal;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    width: 180px;
+    float: right;
+    vertical-align: top;
+}
+
+fileserver {
+
+}
+
+.fileserver label[for=source-ip2] {
+    color: black;
+    cursor: none;
+    background: white;
+    text-align: left;
+    display: block-inline;
+    font-size: 13px;
+    font-family: arial, sans-serif;
+    border-radius: 0;
+    color: black;
+    box-shadow: none;
+    margin-bottom: 0;
+    display: block;
+    font-weight: bold;
+    padding: 0px 0px;
+    position: relative;
+    width: 500px;
+    z-index:100;
+    margin-left: 35px;
+    padding: 5px 0px
+}
+
+.fileserver input {
+    color: rgb(38, 50, 56);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    background: rgba(136, 126, 126, 0.04);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.02);
+    text-align: center;
+    margin-left: 30px;
+    width: 180px;
+    display: block-inline;
+}
+
+.fileserver input[name="fileserver-on"] {
+    cursor: pointer;
+    border-radius: 5em;
+    color: white;
+    background: green;
+    border: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 13px;
+    font-weight: normal;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    width: 130px;
+}
+
+.fileserver input[name="fileserver-running"] {
+    border-radius: 5em;
+    color: white;
+    background: gray;
+    border: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 13px;
+    font-weight: normal;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    width: 150px;
+}
+
+.fileserver input[name="fileserver-off"] {
+    cursor: pointer;
+    border-radius: 5em;
+    color: white;
+    background: red;
+    border: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 13px;
+    font-weight: normal;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    width: 150px;
+}
+
+.tabordion {
+  color: #333;
+  display: block;
+  font-family: arial, sans-serif;
+  margin: auto;
+  position: relative;
+  width: 80%;
+}
+
+.tabordion input[name="sections"] {
+  left: -9999px;
+  position: absolute;
+  top: -9999px;
+}
+
+.tabordion section {
+  display: block;
+}
+
+.tabordion section label {
+  background: white;
+  border-radius: 1em;
+  color: black;
+  box-shadow: 1px 2px 3px rgba(0,0,0,.5);
+  margin-bottom: 5px;
+  cursor: pointer;
+  display: block;
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 15px 20px;
+  position: relative;
+  width: 180px;
+  z-index:100;
+}
+
+.tabordion section article {
+  display: none;
+  left: 230px;
+  min-width: 300px;
+  padding: 0 0 0 21px;
+  position: absolute;  
+  top: 0;
+}
+
+.tabordion section article:after {
+  background: white;
+  bottom: 0;
+  content: "";
+  display: block;
+  left:-229px;
+  position: absolute;
+  top: 0;
+  width: 220px;
+  z-index:1;
+}
+
+.tabordion input[name="sections"]:checked + label { 
+  background: green;
+  color: white;
+}
+
+.tabordion input[name="sections"]:checked ~ article {
+  display: block;
+}
+
+@media (max-width: 533px) {
+  
+  h1 {
+    width: 100%;
+  }
+
+  .tabordion {
+    width: 100%;
+  }
+  
+  .tabordion section label {
+    font-size: 1em;
+    width: 160px;
+  }  
+
+ .tabordion section article {
+    left: 200px;
+    min-width: 270px;
+  } 
+  
+  .tabordion section article:after {
+    background-color: #ccc;
+    bottom: 0;
+    content: "";
+    display: block;
+    left:-199px;
+    position: absolute;
+    top: 0;
+    width: 200px;
+
+  }  
+  
+}
+
+
+@media (max-width: 768px) {
+  h1 {
+    width: 96%;
+  }
+
+  .tabordion {
+    width: 96%;
+  }
+}
+
+
+@media (min-width: 1366px) {
+  h1 {
+    width: 70%;
+  }
+
+  .tabordion {
+    width: 70%;
+  }
+}
+
+.login{
+    background-color: #FFFFFF;
+    width: 400px;
+    height: 450px;
+    margin: 2em auto;
+    border-radius: 1.5em;
+    box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+}
+
+.sign {
+    padding-top: 40px;
+    color: black;
+    font-weight: bold;
+    font-size: 23px;
+}
+
+.un {
+width: 50%;
+color: rgb(38, 50, 56);
+font-weight: 700;
+font-size: 14px;
+letter-spacing: 1px;
+background: rgba(136, 126, 126, 0.04);
+padding: 10px 20px;
+border: none;
+border-radius: 20px;
+outline: none;
+box-sizing: border-box;
+border: 2px solid rgba(0, 0, 0, 0.02);
+margin-bottom: 50px;
+text-align: center;
+margin-bottom: 27px;
+}
+
+form.form1 {
+    padding-top: 40px;
+}
+
+.pass {
+    width: 50%;
+    color: rgb(38, 50, 56);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    background: rgba(136, 126, 126, 0.04);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.02);
+    margin-bottom: 50px;
+    text-align: center;
+    margin-bottom: 27px;
+}
+
+
+.un:focus, .pass:focus {
+    border: 2px solid rgba(0, 0, 0, 0.18) !important;
+
+}
+
+.submit {
+  cursor: pointer;
+    border-radius: 5em;
+    color: white;
+    background: green;
+    border: 0;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 13px;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+}
+
+.forgot {
+    text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+    color: #E1BEE7;
+    padding-top: 15px;
+}
+
+@media (max-width: 600px) {
+    .main {
+        border-radius: 0px;
+    }

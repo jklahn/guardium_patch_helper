@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+
+    <script>
+      function enableDisableHostIp() {
+        var checkBox = document.getElementById("localcheck");
+        var input = document.getElementById("hostip");
+        if (checkBox.checked == true){
+          input.required = false;
+          input.disabled = true;
+          input.style.background = "#dddddd";
+        } else {
+           input.required = true;
+           input.disabled = false;
+           input.style.background = "rgba(136, 126, 126, 0.04)";
+        }
+      }
+    </script>
+
+    <script>
+      function disableButton(elementID) {
+        var button = document.getElementById(elementID);
+        button.disabled = true;
+        button.style.background = "#dddddd";
+        button.style.cursor = "wait";
+      }
+    </script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <meta charset="UTF-8">
+    <title>Guardium Patch Helper</title>
+  </head>
+  <body>
+      <div id="flex-container">
+        <div class="flex-item">
+            <h4>Guardium Patch Helper</h4>
+        </div>
+
+        <div class="flex-item"></div>
+
+        <div class="flex-item">
+        </div>
+    </div>
+    <div class="login" align="center">
+
+       <!-- <br><small>This app requires CLI credentials</small><br> -->
+        <h1><i>CLI Login</i></h1>
+        <form class="form" action="login" method="post" onsubmit="$('#loading').show();$('#error').hide();disableButton('login');">
+          <input class="un" type="text" align="center" placeholder="CLI Username" name="username" value="cli" disabled>
+          <input class="pass" type="password" align="center" placeholder="CLI Password" name="password" value="{{
+            request.form.password }}" autofocus required>
+        <!--
+          <input class="un" type="text" align="center" placeholder="Hostname/ IP Address" name="hostip"
+           value="{{ request.form.hostip }}" required pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$">
+         -->
+          <input type="hidden" name="org.apache.catalina.filters.CSRF_NONCE" value="{{ crsf_token }}" />
+
+          <br>Connect to local Guardium Appliance: <input type="checkbox" name="localcheck" onclick="enableDisableHostIp();" id="localcheck" checked>
+          <br>
+          <br>
+          <input class="un" id="hostip" type="text" align="center" placeholder="Hostname/IP" name="hostip"
+           value="{{ request.form.hostip }}" required pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$|^(([a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$"
+                 title="Hostname or IP Address of the remote Guardium appliance." disabled  style="background:#dddddd;">
+          <br>
+          <input class="submit" align="center" type="submit" id="login" value="Login">
+        </form>
+        <div id="loading" style="display:none;">Creating session. Please Wait...</div>
+
+        <div id="error">
+          {% if error %}
+            <p class="error"><strong>Error:</strong> {{ error }}
+          {% endif %}
+          </div>
+    </div>
+  </body>
+</html>
